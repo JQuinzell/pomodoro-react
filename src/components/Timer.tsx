@@ -1,25 +1,39 @@
-import React from 'react'
-import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
+import React, { useEffect, useRef, useState } from 'react'
+import { CircularProgressbar } from 'react-circular-progressbar'
 import './Timer.scss'
 
 interface Props {
   timerLengthMinutes: number
+  onFinish: () => void
 }
-/**
- * Todo:
- * - display progress & minutes passed
- * - tick timer / update every second
- * - callback when complete & stop picking
- */
 
-export function Timer({ timerLengthMinutes }: Props) {
+export function Timer({ timerLengthMinutes, onFinish }: Props) {
+  const timeoutRef = useRef<number | null>(null)
   const totalSeconds = timerLengthMinutes * 60
-  const elapsedMinutes = timerLengthMinutes / 3
-  const elapsedSeconds = elapsedMinutes * 60
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60)
   const elapsedTime =
-    Math.floor(elapsedMinutes).toString() +
+    elapsedMinutes.toString() +
     ':' +
     (elapsedSeconds % 60).toString().padStart(2, '0')
+
+  useEffect(() => {
+    const timeout = (timeoutRef.current = window.setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1)
+    }, 1000))
+    return () => {
+      clearInterval(timeout)
+    }
+  }, [timerLengthMinutes])
+
+  useEffect(() => {
+    if (elapsedSeconds == timerLengthMinutes * 60) {
+      const timeout = timeoutRef.current
+      if (timeout) clearInterval(timeout)
+      onFinish()
+    }
+  }, [elapsedSeconds])
+
   return (
     <div className="timer-container">
       <CircularProgressbar
