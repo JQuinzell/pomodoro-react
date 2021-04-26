@@ -23,7 +23,7 @@ describe('Timer', () => {
       jest.advanceTimersByTime(5.5 * 60 * 1000)
     })
 
-    const text = await screen.findByText('5:30')
+    const text = screen.getByText('5:30')
     expect(text).toBeInTheDocument()
   })
 
@@ -34,7 +34,7 @@ describe('Timer', () => {
       jest.advanceTimersByTime(11 * 60 * 1000)
     })
 
-    const text = await screen.findByText('10:00')
+    const text = screen.getByText('10:00')
     expect(text).toBeInTheDocument()
     expect(onFinish).toBeCalledTimes(1)
   })
