@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import user from '@testing-library/user-event'
 import { Timer } from './Timer'
 import { act } from 'react-dom/test-utils'
 
@@ -11,6 +12,12 @@ describe('Timer', () => {
       <Timer timerLengthMinutes={timerLengthMinutes} onFinish={onFinish} />
     )
   }
+  const advanceByMinutes = (minutes: number) => {
+    act(() => {
+      const timeMs = minutes * 60 * 1000
+      jest.advanceTimersByTime(timeMs)
+    })
+  }
 
   beforeEach(() => {
     jest.useFakeTimers()
@@ -19,9 +26,7 @@ describe('Timer', () => {
   it('displays elapsed time', async () => {
     init()
 
-    act(() => {
-      jest.advanceTimersByTime(5.5 * 60 * 1000)
-    })
+    advanceByMinutes(5.5)
 
     const text = screen.getByText('5:30')
     expect(text).toBeInTheDocument()
@@ -30,12 +35,25 @@ describe('Timer', () => {
   it('stops and calls finish when time over', async () => {
     init()
 
-    act(() => {
-      jest.advanceTimersByTime(11 * 60 * 1000)
-    })
+    advanceByMinutes(11)
 
     const text = screen.getByText('10:00')
     expect(text).toBeInTheDocument()
     expect(onFinish).toBeCalledTimes(1)
+  })
+
+  it('pauses and resumes on click', () => {
+    init()
+    const timer = screen.getByTestId('timer')
+
+    user.click(timer)
+    advanceByMinutes(1)
+
+    expect(screen.getByText('0:00')).toBeInTheDocument()
+
+    user.click(timer)
+    advanceByMinutes(1)
+
+    expect(screen.getByText('1:00')).toBeInTheDocument()
   })
 })

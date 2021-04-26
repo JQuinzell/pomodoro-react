@@ -8,6 +8,7 @@ interface Props {
 }
 
 export function Timer({ timerLengthMinutes, onFinish }: Props) {
+  const [timerPaused, setTimerPaused] = useState(false)
   const timeoutRef = useRef<number | null>(null)
   const totalSeconds = timerLengthMinutes * 60
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
@@ -18,24 +19,32 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
     (elapsedSeconds % 60).toString().padStart(2, '0')
 
   useEffect(() => {
-    const timeout = (timeoutRef.current = window.setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1)
-    }, 1000))
-    return () => {
-      clearInterval(timeout)
+    if (!timerPaused) {
+      timeoutRef.current = window.setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1)
+      }, 1000)
     }
-  }, [timerLengthMinutes])
+    return () => {
+      const timeout = timeoutRef.current
+      if (timeout) clearInterval(timeout)
+    }
+  }, [timerPaused])
 
   useEffect(() => {
     if (elapsedSeconds == timerLengthMinutes * 60) {
       const timeout = timeoutRef.current
       if (timeout) clearInterval(timeout)
+      timeoutRef.current = null
       onFinish()
     }
   }, [elapsedSeconds])
 
+  function togglePause() {
+    setTimerPaused(!timerPaused)
+  }
+
   return (
-    <div className="timer-container">
+    <div className="timer-container" onClick={togglePause} data-testid="timer">
       <CircularProgressbar
         value={elapsedSeconds}
         minValue={0}
