@@ -19,34 +19,42 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
     (elapsedSeconds % 60).toString().padStart(2, '0')
 
   function clearTimerInterval() {
+    console.log('clearing timer intervalw')
     const timeout = timeoutRef.current
     timeoutRef.current = null
     if (timeout) clearInterval(timeout)
   }
 
   function setTimerInterval() {
+    console.log('Setting timer interval')
     if (!timerPaused) {
-      timeoutRef.current = window.setInterval(() => {
+      const timeout = (timeoutRef.current = window.setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
-      }, 1000)
+      }, 1000))
+      return timeout
     }
   }
 
   useEffect(() => {
+    console.log('Timer paused effect', { timerPaused })
     setTimerInterval()
-    return clearTimerInterval
+    return () => {
+      console.log('timer paused cleanup')
+      // This timer cleanup is clearing an interval for the next mode which stops the timer.
+      clearTimerInterval()
+    }
   }, [timerPaused])
 
   useEffect(() => {
     if (elapsedSeconds >= timerLengthMinutes * 60) {
-      const timeout = timeoutRef.current
-      if (timeout) clearInterval(timeout)
-      timeoutRef.current = null
+      console.log('elapsed timer > length')
+      clearTimerInterval()
       onFinish()
     }
   }, [elapsedSeconds])
 
   function togglePause() {
+    console.log('togglePause', { timerPaused })
     setTimerPaused(!timerPaused)
   }
 
