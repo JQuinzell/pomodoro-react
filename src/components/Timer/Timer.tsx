@@ -31,7 +31,7 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
   }, [timerPaused])
 
   useEffect(() => {
-    if (elapsedSeconds == timerLengthMinutes * 60) {
+    if (elapsedSeconds >= timerLengthMinutes * 60) {
       const timeout = timeoutRef.current
       if (timeout) clearInterval(timeout)
       timeoutRef.current = null
