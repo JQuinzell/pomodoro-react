@@ -18,16 +18,23 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
     ':' +
     (elapsedSeconds % 60).toString().padStart(2, '0')
 
-  useEffect(() => {
+  function clearTimerInterval() {
+    const timeout = timeoutRef.current
+    timeoutRef.current = null
+    if (timeout) clearInterval(timeout)
+  }
+
+  function setTimerInterval() {
     if (!timerPaused) {
       timeoutRef.current = window.setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
       }, 1000)
     }
-    return () => {
-      const timeout = timeoutRef.current
-      if (timeout) clearInterval(timeout)
-    }
+  }
+
+  useEffect(() => {
+    setTimerInterval()
+    return clearTimerInterval
   }, [timerPaused])
 
   useEffect(() => {
