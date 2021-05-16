@@ -14,7 +14,8 @@ describe('PomodoroTimer', () => {
     longBreakLength,
     continuous
   }
-  const init = () => render(<PomodoroTimer {...defaultProps} />)
+  const init = (overrides?: Partial<typeof defaultProps>) =>
+    render(<PomodoroTimer {...defaultProps} {...overrides} />)
 
   const advanceByMinutes = (minutes: number) => {
     act(() => {
@@ -28,7 +29,7 @@ describe('PomodoroTimer', () => {
   })
 
   it('changes to next mode when one ends', () => {
-    init()
+    init({ continuous: true })
     const timer = screen.getByTestId('timer')
 
     expect(screen.getByText('Mode: POMODORO')).toBeInTheDocument()
