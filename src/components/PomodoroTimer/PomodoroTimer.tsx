@@ -39,6 +39,7 @@ export function PomodoroTimer({
     const nextTimerLength = timerLengthMap[nextMode]
     setMode(nextMode)
     setTimerLengthMinutes(nextTimerLength)
+    console.log('finished timer', { nextMode, nextTimerLength })
   }
 
   return (
