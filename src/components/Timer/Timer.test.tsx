@@ -9,7 +9,11 @@ describe('Timer', () => {
   const onFinish = jest.fn()
   const init = () => {
     render(
-      <Timer timerLengthMinutes={timerLengthMinutes} onFinish={onFinish} />
+      <Timer
+        timerLengthMinutes={timerLengthMinutes}
+        onFinish={onFinish}
+        continuous={false}
+      />
     )
   }
   const advanceByMinutes = (minutes: number) => {

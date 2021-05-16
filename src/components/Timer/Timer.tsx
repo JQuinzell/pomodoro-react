@@ -5,9 +5,10 @@ import './Timer.scss'
 interface Props {
   timerLengthMinutes: number
   onFinish: () => void
+  continuous: boolean
 }
 
-export function Timer({ timerLengthMinutes, onFinish }: Props) {
+export function Timer({ timerLengthMinutes, onFinish, continuous }: Props) {
   const [timerPaused, setTimerPaused] = useState(false)
   const timeoutRef = useRef<number | null>(null)
   const totalSeconds = timerLengthMinutes * 60
@@ -28,11 +29,15 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
       console.log('clearing timer intervalw')
       clearInterval(timeout)
     }
+    if (continuous) {
+      setTimerInterval()
+    }
   }
 
   function setTimerInterval() {
     if (!timerPaused) {
-      console.log('Setting timer interval')
+      setElapsedSeconds(0)
+      //console.log('Setting timer interval')
       const timeout = window.setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
       }, 1000)
@@ -44,10 +49,10 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
   }
 
   useEffect(() => {
-    console.log('Timer paused effect', { timerPaused })
+    //console.log('Timer paused effect', { timerPaused })
     setTimerInterval()
     return () => {
-      console.log('timer paused cleanup')
+      //console.log('timer paused cleanup')
       // This timer cleanup is clearing an interval for the next mode which stops the timer.
       clearTimerInterval()
     }
@@ -62,7 +67,7 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
   }, [elapsedSeconds])
 
   function togglePause() {
-    console.log('togglePause', { timerPaused })
+    //console.log('togglePause', { timerPaused })
     setTimerPaused(!timerPaused)
   }
 

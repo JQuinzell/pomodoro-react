@@ -5,6 +5,7 @@ interface Props {
   pomodoroLength: number
   shortBreakLength: number
   longBreakLength: number
+  continuous: boolean
 }
 
 enum TimerMode {
@@ -22,7 +23,8 @@ const nextModeMap = {
 export function PomodoroTimer({
   pomodoroLength,
   shortBreakLength,
-  longBreakLength
+  longBreakLength,
+  continuous
 }: Props) {
   const [mode, setMode] = useState<TimerMode>(TimerMode.Pomodoro)
   const [timerLengthMinutes, setTimerLengthMinutes] = useState(pomodoroLength)
@@ -35,8 +37,6 @@ export function PomodoroTimer({
     }
     const nextMode = nextModeMap[mode]
     const nextTimerLength = timerLengthMap[nextMode]
-    console.log('Finished', mode)
-    console.log({ nextMode, nextTimerLength })
     setMode(nextMode)
     setTimerLengthMinutes(nextTimerLength)
   }
@@ -46,6 +46,7 @@ export function PomodoroTimer({
       <Timer
         timerLengthMinutes={timerLengthMinutes}
         onFinish={handleTimerFinish}
+        continuous={continuous}
       />
       <div>Mode: {mode}</div>
     </>
