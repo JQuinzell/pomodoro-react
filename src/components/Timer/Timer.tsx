@@ -18,20 +18,28 @@ export function Timer({ timerLengthMinutes, onFinish }: Props) {
     ':' +
     (elapsedSeconds % 60).toString().padStart(2, '0')
 
-  function clearTimerInterval() {
-    console.log('clearing timer intervalw')
-    const timeout = timeoutRef.current
-    timeoutRef.current = null
-    if (timeout) clearInterval(timeout)
+  function clearTimerInterval(timeout = timeoutRef.current) {
+    const currentTimeout = timeoutRef.current
+    if (currentTimeout === timeout) {
+      console.log('nulling timer ref', { currentTimeout, timeout })
+      timeoutRef.current = null
+    }
+    if (timeout) {
+      console.log('clearing timer intervalw')
+      clearInterval(timeout)
+    }
   }
 
   function setTimerInterval() {
-    console.log('Setting timer interval')
     if (!timerPaused) {
-      const timeout = (timeoutRef.current = window.setInterval(() => {
+      console.log('Setting timer interval')
+      const timeout = window.setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
-      }, 1000))
+      }, 1000)
+      timeoutRef.current = timeout
       return timeout
+    } else {
+      return null
     }
   }
 
