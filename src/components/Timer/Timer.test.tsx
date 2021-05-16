@@ -7,14 +7,14 @@ import { act } from 'react-dom/test-utils'
 describe('Timer', () => {
   const timerLengthMinutes = 10
   const onFinish = jest.fn()
-  const init = () => {
-    render(
-      <Timer
-        timerLengthMinutes={timerLengthMinutes}
-        onFinish={onFinish}
-        continuous={false}
-      />
-    )
+  const defaultProps = {
+    timerLengthMinutes: timerLengthMinutes,
+    onFinish: onFinish,
+    continuous: false
+  }
+
+  const init = (overrides?: Partial<typeof defaultProps>) => {
+    render(<Timer {...defaultProps} {...overrides} />)
   }
   const advanceByMinutes = (minutes: number) => {
     act(() => {
@@ -59,5 +59,13 @@ describe('Timer', () => {
     advanceByMinutes(1)
 
     expect(screen.getByText('1:00')).toBeInTheDocument()
+  })
+
+  it('starts over if continuous set', () => {
+    init({ continuous: true })
+
+    advanceByMinutes(15)
+
+    expect(screen.getByText('5:00')).toBeInTheDocument()
   })
 })
