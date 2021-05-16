@@ -25,6 +25,8 @@ export function Timer({ timerLengthMinutes, onFinish, continuous }: Props) {
     if (timeout) {
       clearInterval(timeout)
     }
+    // TODO: does this really work. setState does not set it synchronously so setTimerInterval will have the wrong value.
+    // Can easily fix by pulling out the check
     setTimerPaused(continuous ? false : true)
     if (continuous) {
       setTimerInterval()
