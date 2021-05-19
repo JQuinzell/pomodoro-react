@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { formatMinutes } from 'utils'
 import { Timer } from '../Timer'
 
 interface Props {
@@ -28,6 +29,19 @@ export function PomodoroTimer({
 }: Props) {
   const [mode, setMode] = useState<TimerMode>(TimerMode.Pomodoro)
   const [timerLengthMinutes, setTimerLengthMinutes] = useState(pomodoroLength)
+  const [timeStats, setTimeStats] = useState({
+    [TimerMode.Pomodoro]: 0,
+    [TimerMode.ShortBreak]: 0,
+    [TimerMode.LongBreak]: 0
+  })
+  const workPercent =
+    timeStats['POMODORO'] > 0
+      ? (timeStats['POMODORO'] /
+          (timeStats['SHORT_BREAK'] +
+            timeStats['LONG_BREAK'] +
+            timeStats['POMODORO'])) *
+        100
+      : 0
 
   function handleTimerFinish() {
     const timerLengthMap = {
@@ -39,6 +53,10 @@ export function PomodoroTimer({
     const nextTimerLength = timerLengthMap[nextMode]
     setMode(nextMode)
     setTimerLengthMinutes(nextTimerLength)
+    setTimeStats((prev) => ({
+      ...prev,
+      [mode]: prev[mode] + timerLengthMap[mode]
+    }))
     console.log('finished timer', { nextMode, nextTimerLength })
   }
 
@@ -50,6 +68,10 @@ export function PomodoroTimer({
         continuous={continuous}
       />
       <div>Mode: {mode}</div>
+      <p>POMODORO Time: {formatMinutes(timeStats['POMODORO'])}</p>
+      <p>SHORT_BREAK Time: {formatMinutes(timeStats['SHORT_BREAK'])}</p>
+      <p>LONG_BREAK Time: {formatMinutes(timeStats['LONG_BREAK'])}</p>
+      <p>Work %: {workPercent}%</p>
     </>
   )
 }
