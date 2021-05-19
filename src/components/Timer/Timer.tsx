@@ -36,7 +36,6 @@ export function Timer({ timerLengthMinutes, onFinish, continuous }: Props) {
   function setTimerInterval() {
     if (!timerPaused) {
       console.log('setting interval')
-      setElapsedSeconds(0)
       const timeout = window.setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
       }, 1000)
@@ -55,6 +54,7 @@ export function Timer({ timerLengthMinutes, onFinish, continuous }: Props) {
   useEffect(() => {
     if (elapsedSeconds >= timerLengthMinutes * 60) {
       console.log('timer length reached')
+      setElapsedSeconds(0)
       clearTimerInterval()
       onFinish()
     }

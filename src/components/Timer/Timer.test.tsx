@@ -50,15 +50,15 @@ describe('Timer', () => {
     init()
     const timer = screen.getByTestId('timer')
 
-    user.click(timer)
     advanceByMinutes(1)
-
-    expect(screen.getByText('0:00')).toBeInTheDocument()
-
     user.click(timer)
-    advanceByMinutes(1)
 
     expect(screen.getByText('1:00')).toBeInTheDocument()
+
+    user.click(timer)
+    advanceByMinutes(1)
+
+    expect(screen.getByText('2:00')).toBeInTheDocument()
   })
 
   it('starts over if continuous set', () => {
