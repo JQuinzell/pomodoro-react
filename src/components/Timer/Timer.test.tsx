@@ -41,7 +41,7 @@ describe('Timer', () => {
 
     advanceByMinutes(11)
 
-    const text = screen.getByText('10:00')
+    const text = screen.getByText('0:00')
     expect(text).toBeInTheDocument()
     expect(onFinish).toBeCalledTimes(1)
   })
