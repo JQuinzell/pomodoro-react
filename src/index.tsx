@@ -1,17 +1,5 @@
-import { PomodoroTimer } from 'components/PomodoroTimer'
+import { App } from 'components/App/App'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const pomodoroLength = 0.05
-const shortBreakLength = 0.05
-const longBreakLength = 0.1
-
-ReactDOM.render(
-  <PomodoroTimer
-    pomodoroLength={pomodoroLength}
-    shortBreakLength={shortBreakLength}
-    longBreakLength={longBreakLength}
-    continuous={false}
-  />,
-  document.getElementById('app')
-)
+ReactDOM.render(<App />, document.getElementById('app'))
