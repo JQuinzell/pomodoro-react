@@ -7,6 +7,7 @@ interface Props {
   shortBreakLength: number
   longBreakLength: number
   continuous: boolean
+  cyclesBeforeLongBreak: number
 }
 
 enum TimerMode {
@@ -15,20 +16,16 @@ enum TimerMode {
   LongBreak = 'LONG_BREAK'
 }
 
-const nextModeMap = {
-  [TimerMode.Pomodoro]: TimerMode.ShortBreak,
-  [TimerMode.ShortBreak]: TimerMode.LongBreak,
-  [TimerMode.LongBreak]: TimerMode.Pomodoro
-}
-
 export function PomodoroTimer({
   pomodoroLength,
   shortBreakLength,
   longBreakLength,
+  cyclesBeforeLongBreak,
   continuous
 }: Props) {
   const [mode, setMode] = useState<TimerMode>(TimerMode.Pomodoro)
   const [timerLengthMinutes, setTimerLengthMinutes] = useState(pomodoroLength)
+  const [pomodorosCompleted, setPomodorosCompleted] = useState(0)
   const [timeStats, setTimeStats] = useState({
     [TimerMode.Pomodoro]: 0,
     [TimerMode.ShortBreak]: 0,
@@ -49,8 +46,18 @@ export function PomodoroTimer({
       [TimerMode.ShortBreak]: shortBreakLength,
       [TimerMode.LongBreak]: longBreakLength
     }
-    const nextMode = nextModeMap[mode]
+    const updatedPomodorosCompleted =
+      mode === TimerMode.Pomodoro ? pomodorosCompleted + 1 : pomodorosCompleted
+    const deserveLongBreak =
+      updatedPomodorosCompleted % cyclesBeforeLongBreak === 0
+    const nextMode =
+      mode === TimerMode.Pomodoro
+        ? deserveLongBreak
+          ? TimerMode.LongBreak
+          : TimerMode.ShortBreak
+        : TimerMode.Pomodoro
     const nextTimerLength = timerLengthMap[nextMode]
+    setPomodorosCompleted(updatedPomodorosCompleted)
     setMode(nextMode)
     setTimerLengthMinutes(nextTimerLength)
     setTimeStats((prev) => ({

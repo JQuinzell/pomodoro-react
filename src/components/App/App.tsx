@@ -6,6 +6,7 @@ export function App() {
   const [pomodoroLength, setPomodoroLength] = useState(0.1)
   const [shortBreakLength, setShortBreakLength] = useState(5)
   const [longBreakLength, setLongBreakLength] = useState(10)
+  const [cyclesBeforeLongBreak, setCyclesBeforeLongBreak] = useState(2)
   const [isContinuous, setIsContinuous] = useState(false)
 
   return (
@@ -14,6 +15,7 @@ export function App() {
         pomodoroLength={pomodoroLength}
         shortBreakLength={shortBreakLength}
         longBreakLength={longBreakLength}
+        cyclesBeforeLongBreak={cyclesBeforeLongBreak}
         continuous={isContinuous}
       />
       <FormControlLabel
@@ -52,6 +54,16 @@ export function App() {
         onChange={(e) => {
           const length = Number(e.target.value)
           if (length > 0) setLongBreakLength(length)
+        }}
+        type="number"
+      />
+      <TextField
+        id="number-cycles"
+        label="Number of Cycles"
+        value={cyclesBeforeLongBreak}
+        onChange={(e) => {
+          const length = Number(e.target.value)
+          if (length > 0) setCyclesBeforeLongBreak(length)
         }}
         type="number"
       />
