@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CircularProgressbar } from 'react-circular-progressbar'
+import { playAlarm } from 'utils'
 import './Timer.scss'
 
 interface Props {
@@ -56,6 +57,7 @@ export function Timer({ timerLengthMinutes, onFinish, continuous }: Props) {
       console.log('timer length reached')
       setElapsedSeconds(0)
       clearTimerInterval()
+      playAlarm().then(() => console.log('Played alarm'))
       onFinish()
     }
   }, [elapsedSeconds])
