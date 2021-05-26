@@ -2,6 +2,7 @@ import React from 'react'
 import { act, render, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { PomodoroTimer } from '.'
+import { createInit } from 'testUtils'
 
 describe('PomodoroTimer', () => {
   const pomodoroLength = 15
@@ -17,8 +18,7 @@ describe('PomodoroTimer', () => {
     cyclesBeforeLongBreak,
     continuous
   }
-  const init = (overrides?: Partial<typeof defaultProps>) =>
-    render(<PomodoroTimer {...defaultProps} {...overrides} />)
+  const init = createInit(defaultProps, PomodoroTimer)
 
   const advanceByMinutes = (minutes: number) => {
     act(() => {

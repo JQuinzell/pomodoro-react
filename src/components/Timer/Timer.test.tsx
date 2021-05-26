@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { Timer } from './Timer'
 import { act } from 'react-dom/test-utils'
+import { createInit } from 'testUtils'
 
 describe('Timer', () => {
   const timerLengthMinutes = 10
@@ -13,9 +14,8 @@ describe('Timer', () => {
     continuous: false
   }
 
-  const init = (overrides?: Partial<typeof defaultProps>) => {
-    render(<Timer {...defaultProps} {...overrides} />)
-  }
+  const init = createInit(defaultProps, Timer)
+
   const advanceByMinutes = (minutes: number) => {
     act(() => {
       const timeMs = minutes * 60 * 1000
