@@ -1,9 +1,8 @@
 import { PomodoroTimer } from 'components/PomodoroTimer'
 import React, { useState } from 'react'
 import { FormControlLabel, Switch, TextField } from '@material-ui/core'
-
 export function App() {
-  const [pomodoroLength, setPomodoroLength] = useState(0.1)
+  const [pomodoroLength, setPomodoroLength] = useState(15)
   const [shortBreakLength, setShortBreakLength] = useState(5)
   const [longBreakLength, setLongBreakLength] = useState(10)
   const [cyclesBeforeLongBreak, setCyclesBeforeLongBreak] = useState(2)
